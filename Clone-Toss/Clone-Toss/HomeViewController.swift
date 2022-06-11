@@ -14,6 +14,35 @@ class HomeViewController: UIViewController {
     
     title = "홈"
     tabBarItem.image = UIImage(systemName: "house.fill")
+    navigationItem.title = nil
+    
+    let accountAddBarButtonItem = UIBarButtonItem(
+      image: UIImage(systemName: "plus"),
+      style: .plain,
+      target: self,
+      action: #selector(didTabAddAccountButton)
+    )
+    accountAddBarButtonItem.tintColor = .gray
+    
+    let chatBarButtonItem = UIBarButtonItem(
+      image: UIImage(systemName: "bubble.left.fill"),
+      style: .plain,
+      target: self,
+      action: #selector(didTabAddAccountButton)
+    )
+    chatBarButtonItem.tintColor = .gray
+    
+    let alertBarButtonItem = UIBarButtonItem(
+      image: UIImage(systemName: "bell.fill"),
+      style: .plain,
+      target: self,
+      action: #selector(didTabAddAccountButton)
+    )
+    alertBarButtonItem.tintColor = .gray
+    
+    navigationItem.rightBarButtonItems = [
+      alertBarButtonItem, chatBarButtonItem, accountAddBarButtonItem
+    ]
   }
   
   override init(
@@ -34,3 +63,10 @@ class HomeViewController: UIViewController {
   }
 }
 
+private extension HomeViewController {
+  
+  @objc
+  func didTabAddAccountButton() {
+    
+  }
+}
