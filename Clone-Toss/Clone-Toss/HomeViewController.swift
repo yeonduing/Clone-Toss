@@ -16,29 +16,20 @@ class HomeViewController: UIViewController {
     tabBarItem.image = UIImage(systemName: "house.fill")
     navigationItem.title = nil
     
-    let accountAddBarButtonItem = UIBarButtonItem(
-      image: UIImage(systemName: "plus"),
-      style: .plain,
-      target: self,
+    let accountAddBarButtonItem = makeNavigationRightBarButtonItem(
+      withImage: UIImage(systemName: "plus"),
       action: #selector(didTabAddAccountButton)
     )
-    accountAddBarButtonItem.tintColor = .gray
     
-    let chatBarButtonItem = UIBarButtonItem(
-      image: UIImage(systemName: "bubble.left.fill"),
-      style: .plain,
-      target: self,
+    let chatBarButtonItem = makeNavigationRightBarButtonItem(
+      withImage: UIImage(systemName: "bubble.left.fill"),
       action: #selector(didTabAddAccountButton)
     )
-    chatBarButtonItem.tintColor = .gray
     
-    let alertBarButtonItem = UIBarButtonItem(
-      image: UIImage(systemName: "bell.fill"),
-      style: .plain,
-      target: self,
+    let alertBarButtonItem = makeNavigationRightBarButtonItem(
+      withImage: UIImage(systemName: "bell.fill"),
       action: #selector(didTabAddAccountButton)
     )
-    alertBarButtonItem.tintColor = .gray
     
     navigationItem.rightBarButtonItems = [
       alertBarButtonItem, chatBarButtonItem, accountAddBarButtonItem
@@ -64,6 +55,23 @@ class HomeViewController: UIViewController {
 }
 
 private extension HomeViewController {
+  
+  func makeNavigationRightBarButtonItem(
+    withImage image: UIImage?,
+    action: Selector
+  ) -> UIBarButtonItem {
+    let button = UIButton(type: .system)
+    button.setImage(image, for: .normal)
+    button.addTarget(
+      self,
+      action: action,
+      for: .touchUpInside
+    )
+    button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+    button.tintColor = .gray
+    
+    return UIBarButtonItem(customView: button)
+  }
   
   @objc
   func didTabAddAccountButton() {
