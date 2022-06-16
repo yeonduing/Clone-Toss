@@ -12,7 +12,7 @@ class HomeViewController: UIViewController {
   convenience init() {
     self.init(nibName: nil, bundle: nil)
     
-    setupNavigation()
+    setupUI()
   }
   
   override init(
@@ -34,6 +34,11 @@ class HomeViewController: UIViewController {
 }
 
 private extension HomeViewController {
+  
+  func setupUI() {
+    view.backgroundColor = .systemGray5
+    setupNavigation()
+  }
   
   func setupNavigation() {
     title = "홈"
