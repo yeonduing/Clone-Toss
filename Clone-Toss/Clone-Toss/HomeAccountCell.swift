@@ -23,24 +23,32 @@ final class HomeAccountCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  func configureCell(with viewModel: HomeAccountCellItem) {
+    iconImageView.image = viewModel.iconImage
+    titleLabel.text = viewModel.title
+    sumOfMoneyLabel.text = viewModel.sumOfMoney
+  }
 }
 
 private extension HomeAccountCell {
   
   func setupUI() {
-    iconImageView.layer.cornerRadius = 22
-    iconImageView.layer.cornerCurve = .circular
+    iconImageView.circle()
     
-    titleLabel.font = .systemFont(ofSize: 10)
+    titleLabel.font = .systemFont(ofSize: 16)
     titleLabel.textColor = .black
     
-    sumOfMoneyLabel.font = .systemFont(ofSize: 12, weight: .medium)
+    sumOfMoneyLabel.font = .systemFont(ofSize: 18, weight: .medium)
     sumOfMoneyLabel.textColor = .black
     
     button.layer.cornerRadius = 4
     button.layer.cornerCurve = .continuous
     button.backgroundColor = .systemGray6
     button.setTitleColor(.gray, for: .normal)
+    button.setTitle("송금", for: .normal)
+    button.titleLabel?.font = .systemFont(ofSize: 16)
+    button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
   }
   
   func setupLayout() {
@@ -56,11 +64,17 @@ private extension HomeAccountCell {
     }
     
     let stackView = UIStackView()
-    stackView.alignment = .fill
+    stackView.alignment = .center
     stackView.spacing = 10
     
     [iconImageView, labelStackView, button].forEach {
       stackView.addArrangedSubview($0)
+    }
+    
+    addSubview(stackView)
+    
+    stackView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
     }
   }
 }
