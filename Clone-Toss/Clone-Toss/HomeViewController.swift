@@ -6,8 +6,16 @@
 //
 
 import UIKit
+import SnapKit
+import RxSwift
+import RxCocoa
 
 class HomeViewController: UIViewController {
+  private let accountAddBarButtonView: NavigationBarButtonView = .init()
+  private let chatBarButtonView: NavigationBarButtonView = .init()
+  private let alertBarButtonView: NavigationBarButtonView = .init()
+  
+  private let disposeBag = DisposeBag()
   
   convenience init() {
     self.init(nibName: nil, bundle: nil)
@@ -28,8 +36,6 @@ class HomeViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    view.backgroundColor = .white
   }
 }
 
@@ -50,69 +56,50 @@ private extension HomeViewController {
   }
   
   func setupNavigationLeftBarButtonItems() {
-    let chatBarButtonItem = makeNavigationBarButtonItem(
-      withImage: UIImage(systemName: "bubble.left.fill"),
-      action: #selector(didTabAddAccountButton),
-      frame: .zero
-    )
-    
     let titleBarButton = UIButton(type: .system)
     titleBarButton.tintColor = .gray
     titleBarButton.setTitle("toss", for: .normal)
+    titleBarButton.setImage(UIImage(systemName: "bubble.left.fill"), for: .normal)
     titleBarButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .heavy)
-    titleBarButton.addTarget(
-      self,
-      action: #selector(didTabAddAccountButton),
-      for: .touchUpInside
-    )
     let titleBarButtonItem = UIBarButtonItem(customView: titleBarButton)
     
     navigationItem.leftBarButtonItems = [
-      chatBarButtonItem, titleBarButtonItem
+      titleBarButtonItem
     ]
   }
   
   func setupNavigationRightBarButtonItems() {
-    let accountAddBarButtonItem = makeNavigationBarButtonItem(
-      withImage: UIImage(systemName: "plus"),
-      action: #selector(didTabAddAccountButton)
-    )
+    let accountAddBarButtonItem = UIBarButtonItem(customView: accountAddBarButtonView)
+    accountAddBarButtonView.setImage(UIImage(systemName: "plus"), for: .normal)
+    accountAddBarButtonView.isDotbadgeViewHidden = true
+    alertBarButtonView.buttonControlEvent
+      .subscribe(onNext: {
+        print("hello")
+      })
+      .disposed(by: disposeBag)
     
-    let chatBarButtonItem = makeNavigationBarButtonItem(
-      withImage: UIImage(systemName: "bubble.left.fill"),
-      action: #selector(didTabAddAccountButton)
-    )
+    let chatBarButtonItem = UIBarButtonItem(customView: chatBarButtonView)
+    chatBarButtonView.setImage(UIImage(systemName: "bubble.left.fill"), for: .normal)
+    alertBarButtonView.buttonControlEvent
+      .subscribe(onNext: {
+        print("hello")
+      })
+      .disposed(by: disposeBag)
     
-    let alertBarButtonItem = makeNavigationBarButtonItem(
-      withImage: UIImage(systemName: "bell.fill"),
-      action: #selector(didTabAddAccountButton)
-    )
+    let alertBarButtonItem = UIBarButtonItem(customView: alertBarButtonView)
+    alertBarButtonView.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+    alertBarButtonView.buttonControlEvent
+      .subscribe(onNext: {
+        print("hello")
+      })
+      .disposed(by: disposeBag)
     
     navigationItem.rightBarButtonItems = [
       alertBarButtonItem, chatBarButtonItem, accountAddBarButtonItem
     ]
   }
+}
+
+private extension HomeViewController {
   
-  func makeNavigationBarButtonItem(
-    withImage image: UIImage?,
-    action: Selector,
-    frame: CGRect = CGRect(x: 0, y: 0, width: 40, height: 40)
-  ) -> UIBarButtonItem {
-    let button = UIButton(type: .system)
-    button.setImage(image, for: .normal)
-    button.addTarget(
-      self,
-      action: action,
-      for: .touchUpInside
-    )
-    button.frame = frame
-    button.tintColor = .gray
-    
-    return UIBarButtonItem(customView: button)
-  }
-  
-  @objc
-  func didTabAddAccountButton() {
-    
-  }
 }
