@@ -12,11 +12,12 @@ typealias CTImage = UIImage
 extension UIView {
     func circle(){
         let radius = min(self.frame.size.height, self.frame.size.width) / 2.0
-        self.roundedCorner(radius: radius)
+        roundedCorner(radius: radius)
     }
     
     func roundedCorner(radius: CGFloat) {
-        self.layer.cornerRadius = radius
-        self.clipsToBounds = true
+        layer.cornerRadius = radius
+        layer.cornerCurve = .circular
+        clipsToBounds = true
     }
 }
