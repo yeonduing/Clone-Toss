@@ -15,12 +15,17 @@ class HomeViewController: UIViewController {
   private let chatBarButtonView: NavigationBarButtonView = .init()
   private let alertBarButtonView: NavigationBarButtonView = .init()
   
+  private let collectionView: HomeCollectionView = .init()
+  
   private let disposeBag = DisposeBag()
   
   convenience init() {
     self.init(nibName: nil, bundle: nil)
     
     setupUI()
+    setupLayout()
+
+    collectionView.dataSource = self
   }
   
   override init(
@@ -44,6 +49,14 @@ private extension HomeViewController {
   func setupUI() {
     view.backgroundColor = .systemGray5
     setupNavigation()
+  }
+  
+  func setupLayout() {
+    view.addSubview(collectionView)
+    
+    collectionView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
   }
   
   func setupNavigation() {
@@ -100,6 +113,41 @@ private extension HomeViewController {
   }
 }
 
-private extension HomeViewController {
+extension HomeViewController: UICollectionViewDataSource {
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    1
+  }
+  
+  func collectionView(
+    _ collectionView: UICollectionView,
+    numberOfItemsInSection section: Int
+  ) -> Int {
+    1
+  }
+  
+  func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(for: indexPath) as HomeAccountCell
+    cell.configureCell(with: HomeAccountCellItem(title: "hello", sumOfMoney: "1,000원", iconImage: UIImage(systemName: "person.fill")))
+    
+    return cell
+  }
+  
+  func collectionView(
+    _ collectionView: UICollectionView,
+    viewForSupplementaryElementOfKind kind: String,
+    at indexPath: IndexPath
+  ) -> UICollectionReusableView {
+    let headerView = collectionView.dequeueReusableSupplementaryView(
+      ofKind: HomeCollectionView.ElementKind.sectionHeader,
+      for: indexPath
+    ) as HomeSectionHeaderView
+    
+    headerView.configure(title: "송금")
+    
+    return headerView
+  }
   
 }
