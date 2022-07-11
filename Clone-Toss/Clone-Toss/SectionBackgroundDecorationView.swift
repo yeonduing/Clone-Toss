@@ -13,6 +13,13 @@ final class SectionBackgroundDecorationView: UICollectionReusableView {
     backgroundColor = .white
   }
   
+  override func layoutSublayers(of layer: CALayer) {
+    super.layoutSublayers(of: layer)
+    
+    layer.cornerRadius = 20
+    layer.cornerCurve = .continuous
+  }
+  
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
