@@ -9,8 +9,12 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import RxGesture
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
+  typealias Snapshot = NSDiffableDataSourceSnapshot<HomeCollectionViewSection, HomeAccountCellItem>
+  typealias DataSource = UICollectionViewDiffableDataSource<HomeCollectionViewSection, HomeAccountCellItem>
+  
   private let accountAddBarButtonView: NavigationBarButtonView = .init()
   private let chatBarButtonView: NavigationBarButtonView = .init()
   private let alertBarButtonView: NavigationBarButtonView = .init()
@@ -19,13 +23,15 @@ class HomeViewController: UIViewController {
   
   private let disposeBag = DisposeBag()
   
+  private lazy var dataSource = makeDataSource()
+  private var sections = HomeCollectionViewSection.allSections
+  
   convenience init() {
     self.init(nibName: nil, bundle: nil)
     
     setupUI()
     setupLayout()
-
-    collectionView.dataSource = self
+    applySnapshot()
   }
   
   override init(
@@ -41,6 +47,12 @@ class HomeViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    setupTabBar()
   }
 }
 
@@ -64,8 +76,17 @@ private extension HomeViewController {
     tabBarItem.image = UIImage(systemName: "house.fill")
     navigationItem.title = nil
     
+    setupNavigationBlurEffect()
     setupNavigationLeftBarButtonItems()
     setupNavigationRightBarButtonItems()
+  }
+  
+  func setupNavigationBlurEffect() {
+    let appearance = UINavigationBarAppearance()
+    appearance.configureWithTransparentBackground()
+    appearance.backgroundEffect = UIBlurEffect(style: .light)
+
+    UINavigationBar.appearance().standardAppearance = appearance
   }
   
   func setupNavigationLeftBarButtonItems() {
@@ -113,41 +134,88 @@ private extension HomeViewController {
   }
 }
 
-extension HomeViewController: UICollectionViewDataSource {
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
-    1
-  }
+private extension HomeViewController {
   
-  func collectionView(
-    _ collectionView: UICollectionView,
-    numberOfItemsInSection section: Int
-  ) -> Int {
-    1
+  func setupTabBar() {
+    tabBarController?.tabBar.layer.masksToBounds = true
+    tabBarController?.tabBar.isTranslucent = true
+    let appearance = UITabBarAppearance()
+    appearance.configureWithOpaqueBackground()
+    tabBarController?.tabBar.standardAppearance = appearance
+    if #available(iOS 15.0, *) {
+      tabBarController?.tabBar.scrollEdgeAppearance = appearance
+    }
+    tabBarController?.tabBar.layer.cornerRadius = 20
+    tabBarController?.tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
   }
+}
+
+extension HomeViewController: UIGestureRecognizerDelegate {
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    true
+  }
+}
+
+private extension HomeViewController {
   
-  func collectionView(
-    _ collectionView: UICollectionView,
-    cellForItemAt indexPath: IndexPath
-  ) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(for: indexPath) as HomeAccountCell
-    cell.configureCell(with: HomeAccountCellItem(title: "hello", sumOfMoney: "1,000원", iconImage: UIImage(systemName: "person.fill")))
+  func makeDataSource() -> DataSource {
+    let dataSource = DataSource(
+      collectionView: collectionView,
+      cellProvider: { [disposeBag] (collectionView, indexPath, video) -> UICollectionViewCell? in
+        let cell = collectionView.dequeueReusableCell(for: indexPath) as HomeAccountCell
+        cell.configureCell(with: HomeAccountCellItem(title: "hello", sumOfMoney: "1,000원", iconImage: UIImage(systemName: "person.fill")))
+        
+        let cellLongPressGesture = cell.rx.longPressGesture(
+          configuration: { gestureRecognizer, delegate in
+            gestureRecognizer.minimumPressDuration = 0
+            gestureRecognizer.delaysTouchesBegan = false
+            gestureRecognizer.delaysTouchesEnded = false
+          }
+        )
+        
+        cellLongPressGesture
+          .when(.began)
+          .asDriver(onErrorJustReturn: .init())
+          .drive(onNext: { _ in
+            cell.contentView.backgroundColor = .systemGray6
+          })
+          .disposed(by: disposeBag)
+        
+        cellLongPressGesture
+          .when(.ended)
+          .asDriver(onErrorJustReturn: .init())
+          .drive(onNext: { _ in
+            cell.contentView.backgroundColor = .clear
+          })
+          .disposed(by: disposeBag)
+        
+        return cell
+      })
     
-    return cell
+    dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+      guard kind == HomeCollectionView.ElementKind.sectionHeader else {
+        return nil
+      }
+      let section = self?.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+      let headerView = collectionView.dequeueReusableSupplementaryView(
+        ofKind: HomeCollectionView.ElementKind.sectionHeader,
+        for: indexPath
+      ) as HomeSectionHeaderView
+      
+      headerView.configure(title: section?.title ?? "")
+      
+      return headerView
+    }
+    
+    return dataSource
   }
   
-  func collectionView(
-    _ collectionView: UICollectionView,
-    viewForSupplementaryElementOfKind kind: String,
-    at indexPath: IndexPath
-  ) -> UICollectionReusableView {
-    let headerView = collectionView.dequeueReusableSupplementaryView(
-      ofKind: HomeCollectionView.ElementKind.sectionHeader,
-      for: indexPath
-    ) as HomeSectionHeaderView
-    
-    headerView.configure(title: "송금")
-    
-    return headerView
+  func applySnapshot(animatingDifferences: Bool = true) {
+    var snapshot = Snapshot()
+    snapshot.appendSections(sections)
+    sections.forEach { section in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+    dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
   }
-  
 }
