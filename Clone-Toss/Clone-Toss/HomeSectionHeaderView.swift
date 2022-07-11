@@ -39,17 +39,18 @@ private extension HomeSectionHeaderView {
   func setupLayout() {
     [titleLabel, chevronButton].forEach {
       addSubview($0)
-      $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let offset: CGFloat = 16
-    NSLayoutConstraint.activate([
-      titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: offset),
-      titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset),
-      titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -offset),
-      
-      chevronButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-      chevronButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
-    ])
+    let offset: CGFloat = 20
+    
+    titleLabel.snp.makeConstraints { make in
+      make.top.leading.equalToSuperview().offset(offset)
+      make.bottom.equalToSuperview().inset(offset)
+    }
+    
+    chevronButton.snp.makeConstraints { make in
+      make.centerY.equalTo(titleLabel.snp.centerY)
+      make.trailing.equalToSuperview().inset(offset)
+    }
   }
 }
