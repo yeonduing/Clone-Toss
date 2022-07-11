@@ -12,6 +12,7 @@
 		E24DF695287A8518004B1433 /* NavigationBarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF694287A8518004B1433 /* NavigationBarButtonView.swift */; };
 		E24DF698287ABF9E004B1433 /* HomeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF697287ABF9E004B1433 /* HomeCollectionView.swift */; };
 		E24DF69A287AEBCE004B1433 /* SectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF699287AEBCE004B1433 /* SectionBackgroundDecorationView.swift */; };
+		E24DF69D287B114A004B1433 /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = E24DF69C287B114A004B1433 /* RxGesture */; };
 		E264A58928772BDE00900F1A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E264A58828772BDE00900F1A /* HomeViewModel.swift */; };
 		E27FD4C12854C9F900C42FF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FD4C02854C9F900C42FF0 /* AppDelegate.swift */; };
 		E27FD4C32854C9F900C42FF0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FD4C22854C9F900C42FF0 /* SceneDelegate.swift */; };
@@ -78,6 +79,7 @@
 			files = (
 				E27FD4F62854DCFA00C42FF0 /* RxSwift in Frameworks */,
 				E2411BB92879794B00359D4D /* SnapKit in Frameworks */,
+				E24DF69D287B114A004B1433 /* RxGesture in Frameworks */,
 				E27FD4F42854DCFA00C42FF0 /* RxRelay in Frameworks */,
 				E27FD4F22854DCFA00C42FF0 /* RxCocoa in Frameworks */,
 			);
@@ -180,6 +182,7 @@
 				E27FD4F32854DCFA00C42FF0 /* RxRelay */,
 				E27FD4F52854DCFA00C42FF0 /* RxSwift */,
 				E2411BB82879794B00359D4D /* SnapKit */,
+				E24DF69C287B114A004B1433 /* RxGesture */,
 			);
 			productName = "Clone-Toss";
 			productReference = E27FD4BD2854C9F900C42FF0 /* Clone-Toss.app */;
@@ -256,6 +259,7 @@
 			packageReferences = (
 				E27FD4F02854DCFA00C42FF0 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				E2411BB72879794B00359D4D /* XCRemoteSwiftPackageReference "SnapKit" */,
+				E24DF69B287B114A004B1433 /* XCRemoteSwiftPackageReference "RxGesture" */,
 			);
 			productRefGroup = E27FD4BE2854C9F900C42FF0 /* Products */;
 			projectDirPath = "";
@@ -658,6 +662,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		E24DF69B287B114A004B1433 /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		E27FD4F02854DCFA00C42FF0 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
@@ -673,6 +685,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2411BB72879794B00359D4D /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		E24DF69C287B114A004B1433 /* RxGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E24DF69B287B114A004B1433 /* XCRemoteSwiftPackageReference "RxGesture" */;
+			productName = RxGesture;
 		};
 		E27FD4F12854DCFA00C42FF0 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
