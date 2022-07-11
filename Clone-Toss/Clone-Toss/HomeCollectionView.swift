@@ -10,14 +10,26 @@ import UIKit
 final class HomeCollectionView: UICollectionView {
   
   convenience init() {
+    let configuration: UICollectionViewCompositionalLayoutConfiguration = .init()
+    configuration.interSectionSpacing = 16
+    
     self.init(
-      frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: Self.sectionProvider)
+      frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(
+        sectionProvider: Self.sectionProvider,
+        configuration: configuration
+      )
     )
+    
+    backgroundColor = .clear
     
     registerCell(ofType: HomeAccountCell.self)
     registerSupplementaryView(
       ofType: HomeSectionHeaderView.self,
       ofKind: ElementKind.sectionHeader
+    )
+    collectionViewLayout.register(
+      SectionBackgroundDecorationView.self,
+      forDecorationViewOfKind: ElementKind.background
     )
   }
   
@@ -34,6 +46,7 @@ final class HomeCollectionView: UICollectionView {
   
   enum ElementKind {
     static let sectionHeader = "sectionHeader"
+    static let background = "background"
   }
 }
 
@@ -65,12 +78,12 @@ private extension HomeCollectionView {
     
     let section = NSCollectionLayoutSection(group: group)
     section.contentInsets = NSDirectionalEdgeInsets(
-      top: 12, leading: 24, bottom: 12, trailing: 24
+      top: 0, leading: 16, bottom: 0, trailing: 16
     )
     
     let headerSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1.0),
-      heightDimension: .estimated(60)
+      heightDimension: .estimated(52)
     )
     let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
       layoutSize: headerSize,
@@ -79,65 +92,14 @@ private extension HomeCollectionView {
     )
     section.boundarySupplementaryItems = [sectionHeader]
     
-    return section
-  }
-}
-
-extension UICollectionView {
-  func registerCell(
-    ofType cellType: UICollectionViewCell.Type,
-    withReuseIdentifier identifier: String? = nil
-  ) {
-    let reuseIdentifier = identifier ?? String(describing: cellType.self)
-    register(cellType, forCellWithReuseIdentifier: reuseIdentifier)
-  }
-  
-  func dequeueReusableCell<T: UICollectionViewCell>(
-    withReuseIdentifier identifier: String? = nil,
-    for indexPath: IndexPath
-  ) -> T {
-    let reuseIdentifier = identifier ?? String(describing: T.self)
-    
-    guard let cell = dequeueReusableCell(
-      withReuseIdentifier: reuseIdentifier,
-      for: indexPath
-    ) as? T
-    else {
-      fatalError("dequeueReusableCell(identifier:) can not dequeue \(reuseIdentifier)")
-    }
-    
-    return cell
-  }
-  
-  func registerSupplementaryView(
-    ofType viewType: UICollectionReusableView.Type,
-    ofKind elementKind: String = UICollectionView.elementKindSectionHeader,
-    withReuseIdentifier identifier: String? = nil
-  ) {
-    let reuseIdentifier = identifier ?? String(describing: viewType.self)
-    register(
-      viewType,
-      forSupplementaryViewOfKind: elementKind,
-      withReuseIdentifier: reuseIdentifier
+    let sectionBackground = NSCollectionLayoutDecorationItem.background(
+      elementKind: ElementKind.background)
+    sectionBackground.contentInsets = NSDirectionalEdgeInsets(
+      top: 0, leading: 16, bottom: 0, trailing: 16
     )
-  }
-  
-  func dequeueReusableSupplementaryView<T: UICollectionReusableView>(
-    ofKind elementKind: String = UICollectionView.elementKindSectionHeader,
-    withReuseIdentifier identifier: String? = nil,
-    for indexPath: IndexPath
-  ) -> T {
-    let reuseIdentifier = identifier ?? String(describing: T.self)
     
-    guard let view = dequeueReusableSupplementaryView(
-      ofKind: elementKind,
-      withReuseIdentifier: reuseIdentifier,
-      for: indexPath
-    ) as? T
-    else {
-      fatalError("dequeueReusableSupplementaryView(identifier:) can not dequeue \(reuseIdentifier)")
-    }
+    section.decorationItems = [sectionBackground]
     
-    return view
+    return section
   }
 }
