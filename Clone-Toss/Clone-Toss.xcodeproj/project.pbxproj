@@ -13,6 +13,7 @@
 		E24DF698287ABF9E004B1433 /* HomeCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF697287ABF9E004B1433 /* HomeCollectionView.swift */; };
 		E24DF69A287AEBCE004B1433 /* SectionBackgroundDecorationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF699287AEBCE004B1433 /* SectionBackgroundDecorationView.swift */; };
 		E24DF69D287B114A004B1433 /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = E24DF69C287B114A004B1433 /* RxGesture */; };
+		E24DF69F287C09F2004B1433 /* HomeCollectionViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF69E287C09F2004B1433 /* HomeCollectionViewSection.swift */; };
 		E24DF6A1287C22E1004B1433 /* UICollectionView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24DF6A0287C22E1004B1433 /* UICollectionView+.swift */; };
 		E264A58928772BDE00900F1A /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E264A58828772BDE00900F1A /* HomeViewModel.swift */; };
 		E27FD4C12854C9F900C42FF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FD4C02854C9F900C42FF0 /* AppDelegate.swift */; };
@@ -54,6 +55,7 @@
 		E24DF694287A8518004B1433 /* NavigationBarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarButtonView.swift; sourceTree = "<group>"; };
 		E24DF697287ABF9E004B1433 /* HomeCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionView.swift; sourceTree = "<group>"; };
 		E24DF699287AEBCE004B1433 /* SectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
+		E24DF69E287C09F2004B1433 /* HomeCollectionViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewSection.swift; sourceTree = "<group>"; };
 		E24DF6A0287C22E1004B1433 /* UICollectionView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+.swift"; sourceTree = "<group>"; };
 		E264A58828772BDE00900F1A /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E27FD4BD2854C9F900C42FF0 /* Clone-Toss.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Clone-Toss.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +133,7 @@
 				E27FD4C22854C9F900C42FF0 /* SceneDelegate.swift */,
 				E27FD4C42854C9F900C42FF0 /* HomeViewController.swift */,
 				E24DF697287ABF9E004B1433 /* HomeCollectionView.swift */,
+				E24DF69E287C09F2004B1433 /* HomeCollectionViewSection.swift */,
 				E24DF699287AEBCE004B1433 /* SectionBackgroundDecorationView.swift */,
 				E22D85B8285B486F007FAA89 /* HomeAccountCell.swift */,
 				E264A58828772BDE00900F1A /* HomeViewModel.swift */,
@@ -313,6 +316,7 @@
 				E24DF69A287AEBCE004B1433 /* SectionBackgroundDecorationView.swift in Sources */,
 				E27FD4F82854E45000C42FF0 /* TabBarController.swift in Sources */,
 				E22D85B9285B486F007FAA89 /* HomeAccountCell.swift in Sources */,
+				E24DF69F287C09F2004B1433 /* HomeCollectionViewSection.swift in Sources */,
 				E27FD4C52854C9F900C42FF0 /* HomeViewController.swift in Sources */,
 				E2DC092228770B8E00825DC1 /* UIView+.swift in Sources */,
 				E2DC09202877098200825DC1 /* DotBadgeView.swift in Sources */,
