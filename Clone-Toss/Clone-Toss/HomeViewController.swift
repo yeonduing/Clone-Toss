@@ -142,6 +142,9 @@ private extension HomeViewController {
     let appearance = UITabBarAppearance()
     appearance.configureWithOpaqueBackground()
     tabBarController?.tabBar.standardAppearance = appearance
+    tabBarController?.tabBar.layer.borderWidth = 0.5
+    tabBarController?.tabBar.layer.borderColor = UIColor.systemGray4.cgColor
+    tabBarController?.tabBar.clipsToBounds = true
     if #available(iOS 15.0, *) {
       tabBarController?.tabBar.scrollEdgeAppearance = appearance
     }
