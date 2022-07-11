@@ -71,10 +71,11 @@ private extension HomeAccountCell {
       stackView.addArrangedSubview($0)
     }
     
-    addSubview(stackView)
+    contentView.addSubview(stackView)
     
     stackView.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
+      make.top.leading.equalToSuperview().offset(20)
+      make.bottom.trailing.equalToSuperview().inset(20)
     }
   }
 }
