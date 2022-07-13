@@ -59,6 +59,16 @@ extension HomeCollectionViewSection {
         title: "토스뱅크 통장",
         sumOfMoney: "1,000원",
         iconImage: CTImage(systemName: "person.fill")
+      ),
+      HomeAccountCellItem(
+        title: "토스뱅크 통장",
+        sumOfMoney: "1,000원",
+        iconImage: CTImage(systemName: "person.fill")
+      ),
+      HomeAccountCellItem(
+        title: "토스뱅크 통장",
+        sumOfMoney: "1,000원",
+        iconImage: CTImage(systemName: "person.fill")
       )
     ]),
     HomeCollectionViewSection(title: "소비", items: [
