@@ -19,6 +19,7 @@ final class HomeViewController: UIViewController {
   private let chatBarButtonView: NavigationBarButtonView = .init()
   private let alertBarButtonView: NavigationBarButtonView = .init()
   
+  private let remittanceView: UIView = .init()
   private let collectionView: HomeCollectionView = .init()
   
   private let disposeBag = DisposeBag()
@@ -47,6 +48,34 @@ final class HomeViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let interSectionSpacing: CGFloat = HomeCollectionView.Constants.interSectionSpacing
+    let cellHeight: CGFloat = HomeCollectionView.Constants.cellHeight
+    let headerViewHeight: CGFloat = HomeCollectionView.Constants.headerViewHeight
+    let comparedOffset: CGFloat = headerViewHeight + interSectionSpacing + interSectionSpacing + headerViewHeight + cellHeight * 8
+    
+    let tabBarHeight: CGFloat = 83
+    let collectionViewOffset: CGFloat = UIScreen.main.bounds.height - headerViewHeight - tabBarHeight
+    
+    collectionView.rx.contentOffset
+      .asDriver()
+      .drive(onNext: { [weak self] contentOffset in
+        let isHidden = contentOffset.y + collectionViewOffset >= comparedOffset
+        if isHidden {
+          UIView.animate(withDuration: 0.3) {
+            self?.remittanceView.alpha = 0
+            self?.tabBarController?.tabBar.layer.cornerRadius = 20
+            self?.tabBarController?.tabBar.layer.borderWidth = 0.5
+          }
+          self?.view.layoutIfNeeded()
+        }
+        else {
+          self?.remittanceView.alpha = 1
+          self?.tabBarController?.tabBar.layer.cornerRadius = 0
+          self?.tabBarController?.tabBar.layer.borderWidth = 0
+        }
+      })
+      .disposed(by: disposeBag)
   }
   
   override func viewWillLayoutSubviews() {
@@ -60,14 +89,27 @@ private extension HomeViewController {
   
   func setupUI() {
     view.backgroundColor = .systemGray5
+    remittanceView.backgroundColor = .systemBackground
+    remittanceView.layer.cornerRadius = 20
+    remittanceView.layer.cornerCurve = .continuous
+    remittanceView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+    
     setupNavigation()
   }
   
   func setupLayout() {
-    view.addSubview(collectionView)
+    [collectionView, remittanceView].forEach {
+      view.addSubview($0)
+    }
     
     collectionView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
+    }
+    
+    remittanceView.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview()
+      make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+      make.height.equalTo(HomeCollectionView.Constants.headerViewHeight)
     }
   }
   
@@ -84,7 +126,7 @@ private extension HomeViewController {
   func setupNavigationBlurEffect() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithTransparentBackground()
-    appearance.backgroundEffect = UIBlurEffect(style: .light)
+    appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialLight)
 
     UINavigationBar.appearance().standardAppearance = appearance
   }
@@ -106,7 +148,7 @@ private extension HomeViewController {
     let accountAddBarButtonItem = UIBarButtonItem(customView: accountAddBarButtonView)
     accountAddBarButtonView.setImage(UIImage(systemName: "plus"), for: .normal)
     accountAddBarButtonView.isDotbadgeViewHidden = true
-    alertBarButtonView.buttonControlEvent
+    accountAddBarButtonView.buttonControlEvent
       .subscribe(onNext: {
         print("hello")
       })
@@ -114,7 +156,7 @@ private extension HomeViewController {
     
     let chatBarButtonItem = UIBarButtonItem(customView: chatBarButtonView)
     chatBarButtonView.setImage(UIImage(systemName: "bubble.left.fill"), for: .normal)
-    alertBarButtonView.buttonControlEvent
+    chatBarButtonView.buttonControlEvent
       .subscribe(onNext: {
         print("hello")
       })
@@ -142,13 +184,13 @@ private extension HomeViewController {
     let appearance = UITabBarAppearance()
     appearance.configureWithOpaqueBackground()
     tabBarController?.tabBar.standardAppearance = appearance
-    tabBarController?.tabBar.layer.borderWidth = 0.5
+    tabBarController?.tabBar.layer.borderWidth = 0
     tabBarController?.tabBar.layer.borderColor = UIColor.systemGray4.cgColor
     tabBarController?.tabBar.clipsToBounds = true
     if #available(iOS 15.0, *) {
       tabBarController?.tabBar.scrollEdgeAppearance = appearance
     }
-    tabBarController?.tabBar.layer.cornerRadius = 20
+    tabBarController?.tabBar.layer.cornerRadius = 0
     tabBarController?.tabBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
   }
 }
