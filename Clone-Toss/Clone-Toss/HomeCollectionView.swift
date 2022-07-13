@@ -9,9 +9,15 @@ import UIKit
 
 final class HomeCollectionView: UICollectionView {
   
+  enum Constants {
+    static let interSectionSpacing: CGFloat = 16
+    static let cellHeight: CGFloat = 80
+    static let headerViewHeight: CGFloat = 66.33
+  }
+  
   convenience init() {
     let configuration: UICollectionViewCompositionalLayoutConfiguration = .init()
-    configuration.interSectionSpacing = 16
+    configuration.interSectionSpacing = Constants.interSectionSpacing
     
     self.init(
       frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(
@@ -67,7 +73,7 @@ private extension HomeCollectionView {
     
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1.0),
-      heightDimension: .absolute(80)
+      heightDimension: .absolute(Constants.cellHeight)
     )
     let columns = 1
     let group = NSCollectionLayoutGroup.vertical(
@@ -83,7 +89,7 @@ private extension HomeCollectionView {
     
     let headerSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1.0),
-      heightDimension: .estimated(52)
+      heightDimension: .absolute(Constants.headerViewHeight)
     )
     let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
       layoutSize: headerSize,
