@@ -31,6 +31,10 @@ final class HomeSectionHeaderView: UICollectionReusableView {
 private extension HomeSectionHeaderView {
   
   func setupUI() {
+    backgroundColor = .systemBackground
+    layer.cornerRadius = 20
+    layer.cornerCurve = .continuous
+    
     titleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
     chevronButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
     chevronButton.tintColor = .gray
