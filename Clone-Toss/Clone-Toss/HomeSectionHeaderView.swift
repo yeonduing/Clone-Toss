@@ -8,8 +8,9 @@
 import UIKit
 
 final class HomeSectionHeaderView: UICollectionReusableView {
-  private let titleLabel = UILabel()
+  let titleLabel = UILabel()
   private let chevronButton = UIButton()
+  private var titleLabelLayoutConstraint: NSLayoutConstraint?
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -25,6 +26,10 @@ final class HomeSectionHeaderView: UICollectionReusableView {
   func configure(title: String, isChevronButtonHidden: Bool = false) {
     titleLabel.text = title
     chevronButton.isHidden = isChevronButtonHidden
+  }
+  
+  func configureLayoutConstraint(offset: CGFloat) {
+    titleLabelLayoutConstraint?.constant = offset
   }
 }
 
@@ -47,8 +52,11 @@ private extension HomeSectionHeaderView {
     
     let offset: CGFloat = 20
     
+    titleLabelLayoutConstraint = titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset)
+    titleLabelLayoutConstraint?.isActive = true
+    
     titleLabel.snp.makeConstraints { make in
-      make.top.leading.equalToSuperview().offset(offset)
+      make.top.equalToSuperview().offset(offset)
       make.bottom.equalToSuperview().inset(offset)
     }
     

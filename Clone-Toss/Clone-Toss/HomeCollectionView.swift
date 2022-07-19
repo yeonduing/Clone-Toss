@@ -167,8 +167,9 @@ final class StickyHeaderCollectionViewCompositionalLayout: UICollectionViewCompo
       origin.y = min(contentOffset.y + collectionViewOffset, comparedOffset)
       
       var size = layoutAttributes.frame.size
-      size.width = UIScreen.main.bounds.width - 32
-      origin.x = 16
+      let offset: CGFloat = 16
+      size.width = UIScreen.main.bounds.width - 16*2
+      origin.x = offset
       if contentOffset.y + collectionViewOffset < comparedOffset {
         origin.x = 0
         size.width = UIScreen.main.bounds.width

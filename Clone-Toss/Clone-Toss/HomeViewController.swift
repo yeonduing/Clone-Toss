@@ -78,14 +78,23 @@ private extension HomeViewController {
   
   func didConsumptionHeader(isNotSticky: Bool) {
     consumptionHeaderIsNotSticky = isNotSticky
+    
+    
+    let headerViews = collectionView.visibleSupplementaryViews(ofKind: HomeCollectionView.ElementKind.sectionHeader) as? [HomeSectionHeaderView]
+    let headerView = headerViews?.filter {
+      $0.titleLabel.text == "소비"
+    }.first
+    
     UIView.animate(withDuration: 0.2) {
       if isNotSticky {
         self.tabBarController?.tabBar.layer.cornerRadius = 20
         self.tabBarController?.tabBar.layer.borderWidth = 0.5
+        headerView?.configureLayoutConstraint(offset: 20)
       }
       else {
         self.tabBarController?.tabBar.layer.cornerRadius = 0
         self.tabBarController?.tabBar.layer.borderWidth = 0
+        headerView?.configureLayoutConstraint(offset: 36)
       }
       self.view.layoutIfNeeded()
     }
@@ -242,7 +251,9 @@ private extension HomeViewController {
       ) as HomeSectionHeaderView
       
       headerView.configure(title: section?.title ?? "")
-      
+      if indexPath.section == 2 {
+        headerView.configureLayoutConstraint(offset: 36)
+      }
       return headerView
     }
     
