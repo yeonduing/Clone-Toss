@@ -148,8 +148,7 @@ final class StickyHeaderCollectionViewCompositionalLayout: UICollectionViewCompo
     
     superAttributes.forEach { layoutAttributes in
       guard
-        let representedElementKind = layoutAttributes.representedElementKind,
-        representedElementKind == HomeCollectionView.ElementKind.sectionHeader,
+        layoutAttributes.representedElementKind != nil,
         layoutAttributes.indexPath.section == 2
       else { return }
       
@@ -174,8 +173,6 @@ final class StickyHeaderCollectionViewCompositionalLayout: UICollectionViewCompo
         origin.x = 0
         size.width = UIScreen.main.bounds.width
       }
-      
-      layoutAttributes.zIndex = 1024
       layoutAttributes.frame = CGRect(origin: origin, size: size)
       
     }
