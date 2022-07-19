@@ -19,14 +19,8 @@ final class HomeViewController: UIViewController {
   private let chatBarButtonView: NavigationBarButtonView = .init()
   private let alertBarButtonView: NavigationBarButtonView = .init()
   
-  private let remittanceView: UIView = .init()
-  private let remittanceLabel: UILabel = .init()
   private let collectionView: HomeCollectionView = .init()
-  
-  private var remittanceViewLeadingConstraint: NSLayoutConstraint?
-  private var remittanceViewTrailingConstraint: NSLayoutConstraint?
-  
-  private var remittanceViewIsHidden: Bool = false
+  private var consumptionHeaderIsNotSticky: Bool = false
   private let disposeBag = DisposeBag()
   
   private lazy var dataSource = makeDataSource()
@@ -66,8 +60,8 @@ final class HomeViewController: UIViewController {
       .asDriver()
       .drive(onNext: { [weak self] contentOffset in
         let isHidden = contentOffset.y + collectionViewOffset >= comparedOffset
-        if self?.remittanceViewIsHidden != isHidden {
-          self?.remittanceView(isHidden: isHidden)
+        if self?.consumptionHeaderIsNotSticky != isHidden {
+          self?.didConsumptionHeader(isNotSticky: isHidden)
         }
       })
       .disposed(by: disposeBag)
@@ -82,24 +76,14 @@ final class HomeViewController: UIViewController {
 
 private extension HomeViewController {
   
-  func remittanceView(isHidden: Bool) {
-    remittanceViewIsHidden = isHidden
+  func didConsumptionHeader(isNotSticky: Bool) {
+    consumptionHeaderIsNotSticky = isNotSticky
     UIView.animate(withDuration: 0.2) {
-      if isHidden {
-        self.remittanceView.alpha = 0
-        self.remittanceLabel.isHidden = true
-        self.remittanceViewLeadingConstraint?.constant = 16
-        self.remittanceViewTrailingConstraint?.constant = -16
-        self.view.layoutIfNeeded()
+      if isNotSticky {
         self.tabBarController?.tabBar.layer.cornerRadius = 20
         self.tabBarController?.tabBar.layer.borderWidth = 0.5
       }
       else {
-        self.remittanceView.alpha = 1
-        self.remittanceLabel.isHidden = false
-        self.remittanceViewLeadingConstraint?.constant = 0
-        self.remittanceViewTrailingConstraint?.constant = 0
-        self.view.layoutIfNeeded()
         self.tabBarController?.tabBar.layer.cornerRadius = 0
         self.tabBarController?.tabBar.layer.borderWidth = 0
       }
@@ -110,40 +94,16 @@ private extension HomeViewController {
   func setupUI() {
     view.backgroundColor = .systemGray5
     
-    remittanceView.backgroundColor = .systemBackground
-    remittanceView.layer.cornerRadius = 20
-    remittanceView.layer.cornerCurve = .continuous
-    remittanceView.layer.borderWidth = 0.5
-    remittanceView.layer.borderColor = UIColor.systemGray4.cgColor
-    remittanceView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-    
-    remittanceLabel.text = "소비"
-    remittanceLabel.font = .systemFont(ofSize: 22, weight: .semibold)
-    
     setupNavigation()
   }
   
   func setupLayout() {
-    [collectionView, remittanceView, remittanceLabel].forEach {
+    [collectionView].forEach {
       view.addSubview($0)
     }
     
     collectionView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
-    }
-    
-    remittanceViewLeadingConstraint = remittanceView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-    remittanceViewTrailingConstraint = remittanceView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-    remittanceViewLeadingConstraint?.isActive = true
-    remittanceViewTrailingConstraint?.isActive = true
-    remittanceView.snp.makeConstraints { make in
-      make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-      make.height.equalTo(HomeCollectionView.Constants.headerViewHeight)
-    }
-    
-    remittanceLabel.snp.makeConstraints { make in
-      make.leading.equalToSuperview().offset(36)
-      make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
     }
   }
   
