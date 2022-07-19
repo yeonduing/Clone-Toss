@@ -20,7 +20,7 @@ final class HomeCollectionView: UICollectionView {
     configuration.interSectionSpacing = Constants.interSectionSpacing
     
     self.init(
-      frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(
+      frame: .zero, collectionViewLayout: StickyHeaderCollectionViewCompositionalLayout(
         sectionProvider: Self.sectionProvider,
         configuration: configuration
       )
@@ -107,5 +107,83 @@ private extension HomeCollectionView {
     section.decorationItems = [sectionBackground]
     
     return section
+  }
+}
+
+final class StickyHeaderCollectionViewCompositionalLayout: UICollectionViewCompositionalLayout {
+  
+  override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    
+    guard let collectionView = collectionView,
+          var superAttributes = super.layoutAttributesForElements(in: rect)
+    else {
+      return super.layoutAttributesForElements(in: rect) // nil
+    }
+    
+    let contentOffset = collectionView.contentOffset
+    let missingSections = NSMutableIndexSet()
+    
+    superAttributes.forEach { layoutAttributes in
+      if layoutAttributes.representedElementCategory == .cell {
+        missingSections.add(layoutAttributes.indexPath.section)
+      }
+    }
+    
+    superAttributes.forEach { layoutAttributes in
+      if let representedElementKind = layoutAttributes.representedElementKind,
+         representedElementKind == HomeCollectionView.ElementKind.sectionHeader {
+        missingSections.remove(layoutAttributes.indexPath.section)
+      }
+    }
+    
+    missingSections.enumerate { index, stop in
+      let indexPath = IndexPath(item: 0, section: index)
+      if let layoutAttributes = layoutAttributesForSupplementaryView(
+        ofKind: HomeCollectionView.ElementKind.sectionHeader,
+        at: indexPath
+      ) {
+        superAttributes.append(layoutAttributes)
+      }
+    }
+    
+    superAttributes.forEach { layoutAttributes in
+      guard
+        let representedElementKind = layoutAttributes.representedElementKind,
+        representedElementKind == HomeCollectionView.ElementKind.sectionHeader,
+        layoutAttributes.indexPath.section == 2
+      else { return }
+      
+      let numberOfItemsInSection = collectionView.numberOfItems(inSection: 1)
+      
+      let interSectionSpacing: CGFloat = HomeCollectionView.Constants.interSectionSpacing
+      let cellHeight: CGFloat = HomeCollectionView.Constants.cellHeight
+      let headerViewHeight: CGFloat = HomeCollectionView.Constants.headerViewHeight
+      let comparedOffset: CGFloat = headerViewHeight + interSectionSpacing + interSectionSpacing + headerViewHeight + cellHeight * CGFloat(numberOfItemsInSection)
+
+      let tabBarHeight: CGFloat = 83
+      let collectionViewOffset: CGFloat = UIScreen.main.bounds.height - headerViewHeight - tabBarHeight
+      
+      var origin = layoutAttributes.frame.origin
+      origin.y = min(contentOffset.y + collectionViewOffset, comparedOffset)
+      
+      var size = layoutAttributes.frame.size
+      size.width = UIScreen.main.bounds.width - 32
+      origin.x = 16
+      if contentOffset.y + collectionViewOffset < comparedOffset {
+        origin.x = 0
+        size.width = UIScreen.main.bounds.width
+      }
+      
+      layoutAttributes.zIndex = 1024
+      layoutAttributes.frame = CGRect(origin: origin, size: size)
+      
+    }
+    
+    return superAttributes
+  }
+  
+  override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    
+    return true
   }
 }
