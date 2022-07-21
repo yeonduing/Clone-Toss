@@ -114,37 +114,14 @@ final class StickyHeaderCollectionViewCompositionalLayout: UICollectionViewCompo
   
   override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
     
-    guard let collectionView = collectionView,
-          var superAttributes = super.layoutAttributesForElements(in: rect)
+    guard
+      let collectionView = collectionView,
+      let superAttributes = super.layoutAttributesForElements(in: rect)
     else {
       return super.layoutAttributesForElements(in: rect) // nil
     }
     
     let contentOffset = collectionView.contentOffset
-    let missingSections = NSMutableIndexSet()
-    
-    superAttributes.forEach { layoutAttributes in
-      if layoutAttributes.representedElementCategory == .cell {
-        missingSections.add(layoutAttributes.indexPath.section)
-      }
-    }
-    
-    superAttributes.forEach { layoutAttributes in
-      if let representedElementKind = layoutAttributes.representedElementKind,
-         representedElementKind == HomeCollectionView.ElementKind.sectionHeader {
-        missingSections.remove(layoutAttributes.indexPath.section)
-      }
-    }
-    
-    missingSections.enumerate { index, stop in
-      let indexPath = IndexPath(item: 0, section: index)
-      if let layoutAttributes = layoutAttributesForSupplementaryView(
-        ofKind: HomeCollectionView.ElementKind.sectionHeader,
-        at: indexPath
-      ) {
-        superAttributes.append(layoutAttributes)
-      }
-    }
     
     superAttributes.forEach { layoutAttributes in
       guard
